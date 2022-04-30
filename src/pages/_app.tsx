@@ -1,5 +1,10 @@
 import '../styles/globals.css'
+import { useEffect } from 'react'
+import { useRouter } from 'next/router'
 import type { AppProps, NextWebVitalsMetric } from 'next/app'
+import { QueryClient, QueryClientProvider } from 'react-query'
+import { ReactQueryDevtools } from 'react-query/devtools'
+import { supabase } from '../utils/supabase'
 
 export function reportWebVitals(metric: NextWebVitalsMetric) {
   switch (metric.name) {
@@ -24,8 +29,47 @@ export function reportWebVitals(metric: NextWebVitalsMetric) {
   }
 }
 
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      retry: false,
+      refetchOnWindowFocus: false,
+    },
+  },
+})
+
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  const { push, pathname } = useRouter()
+  // ログイン状態に応じてページを遷移させる
+  const validateSesstion = async () => {
+    // ログインのuser情報をuserに格納
+    const user = supabase.auth.user()
+    if (user && pathname === '/') {
+      push('/dashboard')
+    } else if (!user && pathname !== '/') {
+      await push('/')
+    }
+  }
+  // ログイン情報の変化を検知(onAuthStateChanged)
+  supabase.auth.onAuthStateChange((event, _) => {
+    if (event === 'SIGNED_IN' && pathname === '/') {
+      push('/dashboard')
+    }
+    if (event === 'SIGNED_OUT') {
+      push('/')
+    }
+  })
+  // 画面がリロードされてもvalidateSesstionが実行れるようにする
+  useEffect(() => {
+    validateSesstion()
+  }, [])
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Component {...pageProps} />
+      <ReactQueryDevtools initialIsOpen={false} />
+    </QueryClientProvider>
+  )
 }
 
 export default MyApp
