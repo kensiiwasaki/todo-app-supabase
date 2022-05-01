@@ -5,7 +5,7 @@ import { Notice } from '../types/types'
 export const useQueryNotices = () => {
   const getNotices = async () => {
     const { data, error } = await supabase
-      .from('notice')
+      .from('notices')
       .select('*')
       .order('created_at', { ascending: true })
     if (error) {
