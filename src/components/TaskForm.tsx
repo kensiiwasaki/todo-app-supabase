@@ -30,7 +30,10 @@ export const TaskForm: FC = () => {
         value={editedTask.title}
         onChange={(e) => update({ ...editedTask, title: e.target.value })}
       />
-      <button className="ml-2 rounded bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700">
+      <button
+        type="submit"
+        className="ml-2 rounded bg-indigo-600 px-3 py-2 text-sm font-medium text-white hover:bg-indigo-700"
+      >
         {editedTask.id ? 'Update' : 'Create'}
       </button>
     </form>
