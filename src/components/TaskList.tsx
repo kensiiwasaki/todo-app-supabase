@@ -3,7 +3,7 @@ import { useQueryTasks } from '../hooks/useQueryTasks'
 import { Spinner } from './Spinner'
 import { TaskItem } from './TaskItem'
 
-const TaskList: FC = () => {
+export const TaskList: FC = () => {
   const { data: tasks, status } = useQueryTasks()
   if (status === 'loading') return <Spinner />
   if (status === 'error') return <p>{'Error'}</p>
@@ -17,5 +17,3 @@ const TaskList: FC = () => {
     </ul>
   )
 }
-
-export default TaskList

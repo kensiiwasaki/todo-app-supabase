@@ -6,7 +6,7 @@ import {
 } from '@heroicons/react/solid'
 import { supabase } from '../utils/supabase'
 import { Layout } from '../components/Layout'
-import TaskList from '../components/TaskList'
+import { TaskList } from '../components/TaskList'
 import { TaskForm } from '../components/TaskForm'
 
 const Dashboard: NextPage = () => {
